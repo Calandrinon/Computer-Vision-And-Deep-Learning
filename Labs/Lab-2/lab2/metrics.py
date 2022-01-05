@@ -1,8 +1,7 @@
 import numpy as np
-from sklearn import metrics
 
 
-def confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, num_classes = None) -> np.ndarray:
+def confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None) -> np.ndarray:
     """"
     Computes the confusion matrix from labels (y_true) and predictions (y_pred).
     The matrix columns represent the prediction labels and the rows represent the ground truth labels.
@@ -18,16 +17,15 @@ def confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, num_classes = None)
     # even here try to use vectorization, so NO for loops
 
     # 0. if the number of classes is not provided, compute it based on the y_true and y_pred arrays
-    if num_classes is None:
-        num_classes = len(np.unique(np.concatenate([y_true, y_pred])))
 
     # 1. create a confusion matrix of shape (num_classes, num_classes) and initialize it to 0
-    conf_mat = np.zeros((num_classes, num_classes))
 
     # 2. use argmax to get the maximal prediction for each sample
     # hint: you might find np.add.at useful: https://numpy.org/doc/stable/reference/generated/numpy.ufunc.at.html
+    if num_classes is None:
+        num_classes = len(np.unique(np.concatenate([y_true, y_pred])))
+    conf_mat = np.zeros((num_classes, num_classes))
     np.add.at(conf_mat, (y_true, y_pred), 1)
-
     # end TODO your code here
     return conf_mat
 
@@ -46,7 +44,6 @@ def precision_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None) ->
     """
     precision = 0
     # TODO your code here
-    # end TODO your code here
     if num_classes is None:
         num_classes = len(np.unique(np.concatenate([y_true, y_pred])))
     conf = confusion_matrix(y_true, y_pred)
@@ -57,10 +54,11 @@ def precision_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None) ->
         tp = np.diag(conf)
         tpfp = np.sum(conf, axis=0)
         np.divide(tp, tpfp, out=precision, where=tpfp != 0)
+    # end TODO your code here
     return precision
 
 
-def recall_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None)  -> float:
+def recall_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None) -> float:
     """"
     Computes the recall score.
     For binary classification, the recall score is defined as the ratio tp / (tp + fn)
@@ -74,7 +72,6 @@ def recall_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None)  -> f
     """
     recall = None
     # TODO your code here
-    # end TODO your code here
     if num_classes is None:
         num_classes = len(np.unique(np.concatenate([y_true, y_pred])))
     conf = confusion_matrix(y_true, y_pred)
@@ -85,6 +82,7 @@ def recall_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None)  -> f
         tp = np.diag(conf)
         tpfn = np.sum(conf, axis=1)
         np.divide(tp, tpfn, out=recall, where=tpfn != 0)
+    # end TODO your code here
     return recall
 
 
@@ -93,9 +91,10 @@ def accuracy_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     # TODO your code here
     # remember, use vectorization, so no for loops
     # hint: you might find np.trace useful here https://numpy.org/doc/stable/reference/generated/numpy.trace.html
-    # end TODO your code here
     acc_score = np.trace(confusion_matrix(y_true, y_pred)) / len(y_true)
+    # end TODO your code here
     return acc_score
+
 
 def f1_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None) -> float:
     precision = precision_score(y_true, y_pred)
@@ -111,13 +110,14 @@ def f1_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes=None) -> float:
 
 
 if __name__ == '__main__':
-    #pass
+    pass
     # TODO your tests here
     # add some test for your code.
     # you could use the sklean.metrics module (with macro averaging to check your results)
+    from sklearn import metrics
 
     y_true = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-    y_pred = np.array([0, 3, 1, 4, 3, 5, 6, 7, 9, 7])
+    y_pred = np.array([0, 2, 2, 4, 3, 5, 6, 5, 9, 6])
     assert np.allclose(metrics.confusion_matrix(y_true, y_pred), confusion_matrix(y_true, y_pred))
 
     assert np.allclose(metrics.precision_score(y_true, y_pred, average=None, zero_division=0),

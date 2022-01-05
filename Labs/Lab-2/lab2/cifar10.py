@@ -1,5 +1,7 @@
 import os
 import pickle
+import sys
+
 import numpy as np
 
 LABELS = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
@@ -24,11 +26,10 @@ def load_batch(filepath):
         y = data['labels']
         # TODO your code here
         # transform the X vector such that each element from the vector is 32x32 color image
-        # first reshape the vector to (num_images, 3, 32, 32)
+        # 0. first reshape the vector to (num_images, 3, 32, 32)
         # then transpose it, such that the images are stored in (rows, cols, channels) order
-        X = X.reshape((len(X), 3, 32, 32))
-        X = X.transpose(0, 2, 3, 1)
-
+        X = X.reshape(X.shape[0], 3, 32, 32)
+        X = np.transpose(X, axes=[0, 2, 3, 1])
         # end TODO your code here
         return X, np.asarray(y)
 
@@ -38,6 +39,7 @@ def load_ciaf10(root_dir):
     This function loads the entire cifar-10 dataset.
     It returns the training set (each element in the training set is a 32x32 color image), the training set labels,
     the test set (each element in the test set is a 32x32 color image) and the test set labels
+
     The root_dir is the path to the directory where the dataset was downloaded
     """
     cifar10_train_batches = [os.path.join(root_dir, 'data_batch_{}'.format(i)) for i in range(1, 6)]
@@ -67,4 +69,9 @@ def load_ciaf10(root_dir):
     assert (X_test.shape[0] == y_test.shape[0])
 
     return X_train, y_train, X_test, y_test
+
+
+
+
+
 
