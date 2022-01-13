@@ -1,0 +1,6 @@
+Lab-1: Basic numpy and opencv techniques
+Lab-2: Softmax classifier implemented by hand
+Lab-3: Convolutional neural networks concepts, convolutions and filters
+Lab-4: Training a neural network, data loading, hyperparameters 
+Lab-5: Image segmentation and using pre-trained networks
+Lab-6: Text generation at character level
